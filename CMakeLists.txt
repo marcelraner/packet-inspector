@@ -23,6 +23,8 @@ add_executable(packet_inspector
     ./src/packet_reader.cpp
     ./src/packet_parser.hpp
     ./src/packet_parser.cpp
+    ./src/helper.hpp
+    ./src/helper.cpp
 )
 
 target_link_libraries(packet_inspector pcap)

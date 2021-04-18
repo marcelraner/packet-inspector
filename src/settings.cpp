@@ -1,9 +1,18 @@
 #include "settings.hpp"
 
+#include "logging.hpp"
+
 #include <fstream>
 #include <string>
 #include <iostream>
 
+/**
+ * A method for loading settings from a file.
+ * 
+ * @param filename Path of the settings file.
+ * 
+ * @return Return/Error code.
+ */
 enum Settings::ErrorCode Settings::load_settings_from_file(const std::string filename)
 {
     std::ifstream settings_ifstream(filename);
@@ -40,7 +49,21 @@ enum Settings::ErrorCode Settings::load_settings_from_file(const std::string fil
             {
                 this->promiscuous_mode = true;
             }
-        }  
+        }
+
+        if (parameter == "pattern")
+        {
+            if (value.size() > 0)
+            {
+                //TRACE(value);
+                std::vector<unsigned char> pattern(value.begin(), value.end());
+                /*for (unsigned int i = 0; i < pattern.size(); i++)
+                {
+                    TRACE(std::to_string(pattern[i]));
+                }*/
+                this->patterns.push_back(pattern);
+            }
+        }
     }
 
     settings_ifstream.close();
@@ -48,9 +71,32 @@ enum Settings::ErrorCode Settings::load_settings_from_file(const std::string fil
     return Settings::ErrorCode::Ok;
 }
 
-std::string Settings::get_device() {
+/**
+ * Getter for the device name
+ * 
+ * @return Device name
+ */
+std::string Settings::get_device()
+{
     return this->device;
 }
-bool Settings::get_promiscuous_mode() {
+
+/**
+ * Getter for the promiscuous mode
+ * 
+ * @return Promiscuous mode
+ */
+bool Settings::get_promiscuous_mode()
+{
     return this->promiscuous_mode;
+}
+
+/**
+ * Getter for the patterns
+ * 
+ * @return Patterns vector
+ */
+std::vector<std::vector<unsigned char>>& Settings::get_patterns()
+{
+    return this->patterns;
 }

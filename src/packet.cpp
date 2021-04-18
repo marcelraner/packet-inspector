@@ -1,29 +1,63 @@
 #include "packet.hpp"
 
 #include <iostream>
+#include "helper.hpp"
 
-Packet::Packet(uint32_t length, struct timespec timestamp, std::unique_ptr<unsigned char[]> data)
+/**
+ * Packet initializor/constructor
+ * 
+ * @param length Length of the packet data.
+ * @param timestamp Timestamp of the packet.
+ * @param data A vector that holds the data buffer of the packet.
+ */
+Packet::Packet(uint32_t length, struct timespec timestamp)
 {
     this->length = length;
     this->timestamp = timestamp;
-    this->data = std::move(data);
 }
 
-Packet::~Packet()
-{
-    std::cout << "~Packet()" << std::endl;
-}
-
+/**
+ * Prints a packet in a terminal-readable format
+ */
 void Packet::print()
 {
-    std::cout << "Packet {" << std::endl;
-    std::cout << "    timestamp: " << this->timestamp.tv_sec << "." << this->timestamp.tv_nsec << std::endl;
-    std::cout << "    length:    " << this->length << std::endl;
-    std::cout << "    content:   ";
-    for (unsigned int i = 0; i < this->length; i++)
+    std::cout << "Packet:" << std::endl;
+    std::cout << "    Timestamp: " << Helper::timespec_to_string(this->timestamp) << std::endl;
+    std::cout << "    Length: " << this->length << std::endl;
+    std::cout << "    Data: ";
+    for (auto byte: this->data)
     {
-        printf(" %X", this->data[i]);
+        printf(" %02X", byte);
     }
-    std::cout << std::endl;
-    std::cout << "}" << std::endl;
+    std::cout << std::endl << std::endl;
+}
+
+/**
+ * Getter for the packet length
+ * 
+ * @return packet length
+ */
+uint32_t Packet::get_length()
+{
+    return this->length;
+}
+
+/**
+ * Getter for the packet timestamp
+ * 
+ * @return packet timestamp
+ */
+struct timespec Packet::get_timestamp()
+{
+    return this->timestamp;
+}
+
+/**
+ * Getter for the packet data
+ * 
+ * @return packet data
+ */
+std::vector<unsigned char>& Packet::get_data()
+{
+    return this->data;
 }
